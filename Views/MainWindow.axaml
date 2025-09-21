@@ -1,0 +1,164 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:BW_Launcher.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="BW_Launcher.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        SystemDecorations="None"
+        Background="Transparent"
+        Title="B-World"
+        ExtendClientAreaToDecorationsHint="True"
+        CanResize="True"
+        xmlns:md="https://github.com/whistyun/Markdown.Avalonia">
+    <Window.Styles>
+        <Style Selector="Panel.FadeInOnLoad">
+            <Style.Animations>
+                <Animation Duration="0:0:3"> 
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0.0"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="1.0"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </Window.Styles>
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Border CornerRadius="30" BorderThickness="3" Background="#44343434">
+        <Border.BorderBrush>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                <GradientStop Color="#057FD7" Offset="0.0"/>
+                <GradientStop Color="#55D555" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Border.BorderBrush>
+
+        <!-- содержимое окна -->
+        <Panel>
+            <!-- Заголовок -->
+            <Panel HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Margin="10,10"> 
+                <Border HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Background="#343434"
+                    CornerRadius="25"
+                    Height="60"
+                    Padding="10,10">
+                    <Panel>
+                        <Panel HorizontalAlignment="Left">
+                            <Image Source="avares://BW-Launcher/Assets/BW_Logo.png" Width="100" Height="100" />
+                        </Panel>
+                        <Panel HorizontalAlignment="Right">
+                            <TextBlock FontFamily="MainFont" Text="B-Launcher" FontSize="40" FontWeight="Bold" Foreground="White"/>
+                        </Panel>
+                    </Panel>
+                </Border>
+            </Panel>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="240" /> <!-- для фиксированной ширины -->
+                    <ColumnDefinition Width="*" />    <!-- занимает всё оставшееся пространство -->
+                </Grid.ColumnDefinitions>
+
+                <!-- Элементы управления -->
+                <StackPanel HorizontalAlignment="Left"
+                    VerticalAlignment="Stretch" Margin="10,100"
+                    Grid.Column="0">
+                    
+                    <ComboBox x:Name="VersionsList" ItemsSource="{Binding Items}" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}">
+                    </ComboBox>
+
+                    <Panel VerticalAlignment="Stretch" Height="90">
+                        <Border VerticalAlignment="Bottom" HorizontalAlignment="Center" CornerRadius="30" Padding="0.5,0.5" BorderThickness="3" Background="#000000">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                    <GradientStop Color="#057FD7" Offset="0.0"/>
+                                    <GradientStop Color="#55D555" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+
+                            <Border.Styles>
+                                <Style Selector="Border">
+                                    <Setter Property="RenderTransform" Value="scale(1)"/>
+                                </Style>
+                                <Style Selector="Border:pointerover">
+                                    <Setter Property="RenderTransform" Value="scale(1.2)"/>
+                                </Style>
+                            </Border.Styles>
+
+                            <Border.Transitions>
+                                <Transitions>
+                                    <TransformOperationsTransition Property="RenderTransform" Easing="CubicEaseInOut" Duration="0:0:0.3"/>
+                                </Transitions>
+                            </Border.Transitions>
+
+                            <Button Name="InstallButton" CornerRadius="30" Background="Transparent">
+                                <TextBlock FontFamily="MainFont" Foreground="White">
+                                    Установить
+                                </TextBlock>
+                            </Button>
+                        </Border>
+
+                        <Border VerticalAlignment="Top" HorizontalAlignment="Center" CornerRadius="30" Padding="0.5,0.5" BorderThickness="3" Background="#000000">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                    <GradientStop Color="#057FD7" Offset="0.0"/>
+                                    <GradientStop Color="#55D555" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+
+                            <Border.Styles>
+                                <Style Selector="Border">
+                                    <Setter Property="RenderTransform" Value="scale(1)"/>
+                                </Style>
+                                <Style Selector="Border:pointerover">
+                                    <Setter Property="RenderTransform" Value="scale(1.2)"/>
+                                </Style>
+                            </Border.Styles>
+
+                            <Border.Transitions>
+                                <Transitions>
+                                    <TransformOperationsTransition Property="RenderTransform" Easing="CubicEaseInOut" Duration="0:0:0.3"/>
+                                </Transitions>
+                            </Border.Transitions>
+
+                            <Button Name="RunButton" CornerRadius="30" Background="Transparent">
+                                <TextBlock FontFamily="MainFont" Foreground="White">
+                                    Запустить
+                                </TextBlock>
+                            </Button>
+                        </Border>
+                    </Panel>
+                </StackPanel>
+
+                <!-- Блок с описанием -->
+                
+                <Panel Margin="30,100" VerticalAlignment="Stretch" Grid.Column="1">
+                    <Border Padding="20,20"
+                        CornerRadius="15" Background="#343434">    
+                            <md:MarkdownScrollViewer Markdown="{Binding Description}" />
+                    </Border>
+                </Panel>
+            </Grid>
+
+            <!-- Футер с полезной инфой -->
+            <Panel Classes="FadeInOnLoad" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="10,10">
+                <TextBlock HorizontalAlignment="Left" Background="#343434" Foreground="White" VerticalAlignment="Bottom">
+                    <Run Text="Файлы хранятся в " />
+                    <Run Text="{Binding BWorldFolderLocation}"/>
+                    </TextBlock>
+                <Image HorizontalAlignment="Right" Width="64" Height="64" x:Name="SystemIndicator" Source="{Binding OSLogo}"></Image>
+            </Panel>
+        </Panel>
+    </Border>
+</Window>
