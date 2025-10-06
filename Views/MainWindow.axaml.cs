@@ -1,12 +1,8 @@
 using Avalonia.Controls;
-using Avalonia.Media;
 using Avalonia.Interactivity;
 using BW_Launcher.Models;
 using BW_Launcher.ViewModels;
-using BW_Launcher.Helpers;
-using static BW_Launcher.Helpers.L;
 using System.Threading.Tasks;
-using System;
 
 namespace BW_Launcher.Views;
 
@@ -15,15 +11,15 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        Log("Initialized");
+        Log.Information("Initialized");
         RunButton.Click += RunButtonClickHandler;
         InstallButton.Click += InstallButtonClickHandler;
-        //Log($"Avalonia ItemSource variabble elements count is {MainWindowViewModel.verDisplayNames.Count}", "DEBUG");
+        //Log.Information($"Avalonia ItemSource variabble elements count is {MainWindowViewModel.verDisplayNames.Count}", "DEBUG");
     }
 
     public void InstallButtonClickHandler(object? sender, RoutedEventArgs e)
     {
-        Log("Install button clicked");
+        Log.Information("Install button clicked");
 
         var result = Task.Run(async () => await BW_Launcher.Models.VersionsInstaller.DownloadAsync(
             BW_Launcher.ViewModels.MainWindowViewModel.Link,
@@ -33,7 +29,7 @@ public partial class MainWindow : Window
 
     public void RunButtonClickHandler(object? sender, RoutedEventArgs e) 
     {
-        Log("Play button clicked");
+        Log.Information("Play button clicked");
 
         ProcessRunner.RunGame(MainWindowViewModel.ID);
     }

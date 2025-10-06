@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using Spamton;
 using System.Runtime.InteropServices;
 using System.Collections.ObjectModel;
-using static BW_Launcher.Helpers.L;
 
 namespace BW_Launcher.Models
 {
     public class MainWindowModel
     {
-        const string JsonURL = "http://localhost:8080/versions.json"; // TODO ПОДНЯТЬ СЕРВАК
+        const string JsonURL = "http://192.168.1.8:8080/versions.json"; // TODO ПОДНЯТЬ СЕРВАК
         public static sbyte osId { get; } = GetOS();
 
         /*[BIG_SHOT]
@@ -33,11 +32,11 @@ namespace BW_Launcher.Models
 
             if (output == null)
             {
-                Log("Versions list is null", "ERROR");
+                Log.Information("Versions list is null", "ERROR");
                 return new List<BW_Launcher.Models.Version>();
             }
             else
-                Log($"versions count: {output.Count}", "DEBUG");
+                Log.Information($"versions count: {output.Count}", "DEBUG");
                 return output;
         }
 
@@ -51,7 +50,7 @@ namespace BW_Launcher.Models
                 output.Add(versionsList[i].name);
             }
             
-            Log($"Latest version is {output[0]}", "FUN");
+            Log.Information($"Latest version is {output[0]}", "FUN");
 
             return output;
             //return new ObservableCollection<string>() {"DEBUG"};
@@ -66,12 +65,12 @@ namespace BW_Launcher.Models
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                Log("Linux user detected!");
+                Log.Information("Linux user detected!");
                 return 1;
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Log("Microsoft Spyware user detected!");
+                Log.Information("Microsoft Spyware user detected!");
                 return 0;
             }
             else return -1;

@@ -4,7 +4,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Diagnostics;
-using static BW_Launcher.Helpers.L;
 
 namespace BW_Launcher.Models;
 
@@ -26,28 +25,28 @@ public class JSONProcesser
         string jsonString;
 
         using HttpClient client = new HttpClient();
-        Log($"Http client created for {url}");
+        Log.Information($"Http client created for {url}");
 
         HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
-        Log($"Url status {(int)response.StatusCode} {response.ReasonPhrase}");
+        Log.Information($"Url status {(int)response.StatusCode} {response.ReasonPhrase}");
 
         if (response.IsSuccessStatusCode)
         {
             jsonString = await response.Content.ReadAsStringAsync();
-            Log("Content received", "SUCCESS");
-            //Log(jsonString);
+            Log.Information("Content received");
+            //Log.Information(jsonString);
 
             var stopwatch = Stopwatch.StartNew();
                 var data = JsonSerializer.Deserialize<List<Version>>(jsonString);
             stopwatch.Stop();
-            Log($"Parsing took {stopwatch.ElapsedMilliseconds} ms");
+            Log.Information($"Parsing took {stopwatch.ElapsedMilliseconds} ms");
 
             if (data != null) return data;
             else return new List<Version>();
         }
         else
         {
-            Log("Failed to get content from URL", "ERROR");
+            Log.Error("Failed to get content from URL");
             return new List<Version>();
         }
     }
