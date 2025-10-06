@@ -4,8 +4,6 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Spamton;
-using BW_Launcher.Models;
-using static BW_Launcher.Helpers.L;
 
 namespace BW_Launcher.Models
 {
@@ -19,48 +17,50 @@ namespace BW_Launcher.Models
             string localFileName = id + ((MainWindowModel.osId == 1) ? ".AppImage" : ".zip");
 
             try
+      {
+        if (targetDir.StartsWith("~"))
+        {
+          string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+          targetDir = Path.Combine(home, targetDir.TrimStart('~', '/', '\\'));
+        }
+
+        if (!Directory.Exists(targetDir))
+          Directory.CreateDirectory(targetDir);
+
+        string targetPath = Path.Combine(targetDir, localFileName);
+        Log.Information($"Target path is {targetPath}");
+        Log.Information($"target directory is {targetDir}");
+
+        using var http = new HttpClient();
+        using var resp = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+        resp.EnsureSuccessStatusCode();
+
+        using var stream = await resp.Content.ReadAsStreamAsync();
+        using var fs = new FileStream(targetPath, FileMode.Create, FileAccess.Write, FileShare.None);
+
+        Task.Run(async () => await stream.CopyToAsync(fs))
+            .GetAwaiter().GetResult();
+        fs.Dispose();
+
+        Log.Information($"Saved raw file to {targetPath}");
+
+        if (unpackOnLinux || MainWindowModel.osId != 1)
+        {
+          Log.Information("Unpacking...");
+          ZipFile.ExtractToDirectory(targetPath, targetDir);
+          Log.Information("Unpacked!");
+        }
+
+        return 0;
+      }
+      catch (UnauthorizedAccessException)
             {
-                if (targetDir.StartsWith("~"))
-                {
-                    string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                    targetDir = Path.Combine(home, targetDir.TrimStart('~', '/', '\\'));
-                }
-
-                if (!Directory.Exists(targetDir))
-                    Directory.CreateDirectory(targetDir);
-
-                string targetPath = Path.Combine(targetDir, localFileName);
-                Log($"Target path is {targetPath}", "INFO");
-                Log($"target directory is {targetDir}");
-
-                using var http = new HttpClient();
-                using var resp = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-                resp.EnsureSuccessStatusCode();
-
-                using var stream = await resp.Content.ReadAsStreamAsync();
-                using var fs = new FileStream(targetPath, FileMode.Create, FileAccess.Write, FileShare.None);
-                await stream.CopyToAsync(fs);
-                fs.Dispose();
-
-                Log($"Saved raw file to {targetPath}");
-                
-                if (unpackOnLinux || MainWindowModel.osId != 1)
-                {
-                    Log("Распаковка...");
-                    ZipFile.ExtractToDirectory(targetPath, targetDir);
-                    Log("Распаковано!");
-                }
-
-                return 0;
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Log("Access denied. Требуются права для записи в эту папку.", "ERROR");
+                Log.Error("Access denied. Требуются права для записи в эту папку.");
                 return 2;
             }
             catch (Exception ex)
             {
-                Log($"{ex.Message}", "ERROR");
+                Log.Error($"{ex.Message}");
                 return 3;
             }
         }

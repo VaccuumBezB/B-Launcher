@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using static BW_Launcher.Helpers.L;
 
 namespace BW_Launcher.Models;
 
@@ -15,7 +14,7 @@ public class ProcessRunner
 
         try
         {
-            if (targetDir.StartsWith("~"))
+            if (targetDir.StartsWith('~'))
             {
                 string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
                 targetDir = Path.Combine(home, targetDir.TrimStart('~', '/', '\\'));
@@ -36,14 +35,14 @@ public class ProcessRunner
 
                     Process.Start(startInfo);
                 }
-                else Log($"{id} not seems to be installed!", "ERROR");
+                else Log.Information($"{id} not seems to be installed!", "ERROR");
             }
             else
-                Log("There is no versions folder!", "ERROR");
+                Log.Information("There is no versions folder!", "ERROR");
         }
         catch (Exception ex)
         {
-            Log($"{ex.Message}", "ERROR");
+            Log.Information($"{ex.Message}", "ERROR");
         }
     }
 }

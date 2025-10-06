@@ -1,11 +1,9 @@
 ﻿using System;
 using BW_Launcher.Models;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using BW_Launcher.Helpers;
+using BW_Launcher.Models.Helpers;
 using Avalonia.Media.Imaging;
 //using BW_Launcher.Views;
-using static BW_Launcher.Helpers.L;
 using ReactiveUI;
 
 namespace BW_Launcher.ViewModels;
@@ -30,7 +28,7 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             if (_selectedItemIndex != value)
             {
-                Log("Selected index changed", "DEBUG");
+                Log.Information("Selected index changed", "DEBUG");
                 _selectedItemIndex = value;
 
                 ID = BW_Launcher.Models.MainWindowModel.versionsList[
@@ -43,7 +41,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
                 Link = (osId == 1) ? BW_Launcher.Models.MainWindowModel.versionsList[_selectedItemIndex].linkLinux : BW_Launcher.Models.MainWindowModel.versionsList[_selectedItemIndex].linkWindows;
                 
-                //Log(Description);
+                //Log.Information(Description);
 
                 OnPropertyChanged();
                 
